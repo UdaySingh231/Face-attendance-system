@@ -3,14 +3,17 @@ from mysql.connector import Error
 import json
 import logging
 
+import os
+
 def get_connection():
     """Establishes connection to the MySQL database."""
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='uday',  # Updated to use custom password
-            database='face_attendance_db'
+            host=os.environ.get('DB_HOST', 'localhost'),
+            user=os.environ.get('DB_USER', 'root'),
+            password=os.environ.get('DB_PASSWORD', 'uday'),
+            database=os.environ.get('DB_NAME', 'face_attendance_db'),
+            port=int(os.environ.get('DB_PORT', 3306))
         )
         return connection
     except Error as e:
@@ -23,13 +26,15 @@ def create_database_and_connect():
     """Creates the database if it doesn't exist and connects to it."""
     try:
         connection = mysql.connector.connect(
-            host='localhost',
-            user='root',
-            password='uday'
+            host=os.environ.get('DB_HOST', 'localhost'),
+            user=os.environ.get('DB_USER', 'root'),
+            password=os.environ.get('DB_PASSWORD', 'uday'),
+            port=int(os.environ.get('DB_PORT', 3306))
         )
         if connection.is_connected():
             cursor = connection.cursor()
-            cursor.execute("CREATE DATABASE face_attendance_db")
+            db_name = os.environ.get('DB_NAME', 'face_attendance_db')
+            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name}")
             cursor.close()
             connection.close()
             return get_connection()
