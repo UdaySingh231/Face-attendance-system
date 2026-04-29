@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Recognition Attendance</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <!-- Dynamic Background Elements -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+    <div class="bg-shape shape-3"></div>
+
+    <div class="app-container">
+        
+        <!-- Header / Navigation -->
+        <header class="glass-header">
+            <div class="logo">
+                <i class="fa-solid fa-camera-retro"></i>
+                <h1>VisionTrack</h1>
+            </div>
+            <nav>
+                <button class="nav-btn active" data-target="student-panel">Student</button>
+                <button class="nav-btn" data-target="faculty-panel">Faculty</button>
+            </nav>
+        </header>
+
+        <main class="content-wrapper">
+            
+            <!-- ============================================== -->
+            <!-- STUDENT PANEL -->
+            <!-- ============================================== -->
+            <section id="student-panel" class="panel active">
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="register-tab">Register</button>
+                    <button class="tab-btn" data-tab="view-attendance-tab">View Attendance</button>
+                </div>
+                
+                <div class="tab-content glass-card active" id="register-tab">
+                    <h2>Student Registration</h2>
+                    <p class="subtitle">Enter your details and capture your face to enroll.</p>
+                    
+                    <div class="registration-layout">
+                        <div class="form-container">
+                            <form id="registerForm">
+                                <div class="input-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="regName" required placeholder="John Doe">
+                                </div>
+                                <div class="input-group">
+                                    <label>Roll Number</label>
+                                    <input type="text" id="regRoll" required placeholder="CS123">
+                                </div>
+                                <div class="row">
+                                    <div class="input-group">
+                                        <label>Department</label>
+                                        <select id="regDept">
+                                            <option value="Computer Science">Computer Science</option>
+                                            <option value="Electrical">Electrical</option>
+                                            <option value="Mechanical">Mechanical</option>
+                                            <option value="Civil">Civil</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Year</label>
+                                        <select id="regYear">
+                                            <option value="1st Year">1st Year</option>
+                                            <option value="2nd Year">2nd Year</option>
+                                            <option value="3rd Year">3rd Year</option>
+                                            <option value="4th Year">4th Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        
+                        <div class="camera-container">
+                            <label>Capture Your Face</label>
+                            <div class="video-wrapper">
+                                <video id="regVideo" autoplay muted playsinline></video>
+                                <div class="overlay-guideline"></div>
+                                <canvas id="regCanvas" style="display:none;"></canvas>
+                            </div>
+                            <div class="camera-controls">
+                                <button type="button" class="btn primary" id="captureBtn">
+                                    <i class="fa-solid fa-camera"></i> Capture & Register
+                                </button>
+                                <button type="button" class="btn secondary" id="retakeBtn" style="display:none;">
+                                    Retake Photo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content glass-card" id="view-attendance-tab">
+                    <h2>My Attendance Records</h2>
+                    <div class="search-bar">
+                        <input type="text" id="searchRoll" placeholder="Enter your Roll Number">
+                        <button class="btn primary" id="searchBtn"><i class="fa-solid fa-search"></i> Search</button>
+                    </div>
+                    
+                    <div class="records-container" id="studentRecordsContainer" style="display:none;">
+                        <h3 id="studentNameDisplay"></h3>
+                        <div class="table-responsive">
+                            <table class="glass-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="studentRecordsBody">
+                                    <!-- Records populated here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================== -->
+            <!-- FACULTY PANEL -->
+            <!-- ============================================== -->
+            <section id="faculty-panel" class="panel">
+                
+                <!-- Login View -->
+                <div class="glass-card login-card" id="facultyLoginView">
+                    <h2>Faculty Login</h2>
+                    <p class="subtitle">Access the admin dashboard.</p>
+                    <form id="loginForm">
+                        <div class="input-group">
+                            <label>Username</label>
+                            <input type="text" id="loginUsername" required placeholder="admin">
+                        </div>
+                        <div class="input-group">
+                            <label>Password</label>
+                            <input type="password" id="loginPassword" required placeholder="Password">
+                        </div>
+                        <button type="submit" class="btn primary w-100">Login</button>
+                    </form>
+                    <p class="hint">System default: admin / admin123</p>
+                </div>
+
+                <!-- Dashboard View -->
+                <div id="facultyDashboardView" style="display:none;">
+                    <div class="dashboard-header">
+                        <h2>Dashboard</h2>
+                        <button class="btn" id="logoutBtn"><i class="fa-solid fa-sign-out"></i> Logout</button>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="take-attendance-tab">Take Attendance</button>
+                        <button class="tab-btn" data-tab="analytics-tab">Analytics</button>
+                        <button class="tab-btn" data-tab="manage-tab">Manage Students</button>
+                    </div>
+
+                    <!-- Take Attendance Tab -->
+                    <div class="tab-content glass-card active" id="take-attendance-tab">
+                        <div class="header-actions">
+                            <h3>Real-Time Session</h3>
+                            <button class="btn pulse" id="toggleCameraSessionBtn">
+                                Start Camera
+                            </button>
+                        </div>
+                        <div class="live-camera-wrapper" id="liveCameraContainer" style="display:none;">
+                            <video id="liveVideo" autoplay muted playsinline></video>
+                            <canvas id="liveCanvas" class="overlay-canvas"></canvas>
+                            <canvas id="hiddenFrameCanvas" style="display:none;"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Analytics Tab -->
+                    <div class="tab-content glass-card" id="analytics-tab">
+                        <h3>Today's Analytics</h3>
+                        <div class="metrics-grid">
+                            <div class="metric-card">
+                                <h4>Total Enrolled</h4>
+                                <h1 id="statTotalStudents">-</h1>
+                            </div>
+                            <div class="metric-card highlight">
+                                <h4>Present Today</h4>
+                                <h1 id="statPresentToday">-</h1>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive mt-3">
+                            <h4>Recent Records</h4>
+                            <table class="glass-table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Roll No</th>
+                                        <th>Dept.</th>
+                                        <th>Time</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="todayRecordsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Manage Tab -->
+                    <div class="tab-content glass-card" id="manage-tab">
+                        <h3>Enrolled Students</h3>
+                        <div class="table-responsive">
+                            <table class="glass-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Roll No</th>
+                                        <th>Dept.</th>
+                                        <th>Year</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="manageStudentsBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification System -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
